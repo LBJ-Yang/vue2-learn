@@ -57,6 +57,7 @@ export function createCompileToFunctionFn (compile: Function): Function {
     }
 
     // compile
+    // 执行编译，即执行 baseCompile 方法
     const compiled = compile(template, options)
 
     // check compilation errors/tips

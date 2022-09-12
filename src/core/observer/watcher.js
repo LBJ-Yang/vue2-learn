@@ -58,7 +58,7 @@ export default class Watcher {
     if (options) {
       this.deep = !!options.deep
       this.user = !!options.user
-      this.lazy = !!options.lazy
+      this.lazy = !!options.lazy  // computed watcher 的 lazy 为 true
       this.sync = !!options.sync
       this.before = options.before
     } else {
@@ -139,6 +139,7 @@ export default class Watcher {
   /**
    * Clean up for dependency collection.
    */
+  // 万一某一节点被隐藏，则通知当前 watcher 的相应依赖，告知之后该依赖数据变化时不再更新数据的订阅者
   cleanupDeps () {
     let i = this.deps.length
     while (i--) {
@@ -216,8 +217,14 @@ export default class Watcher {
    * Depend on all deps collected by this watcher.
    */
   depend () {
+    // 只有计算属性会执行以下代码
+    // 当 dirty 为 true 时，先执行 evaluate 方法，计算出 value；
+    // 计算过程中会触发其依赖 data 的 getter 方法，此时 computed watcher 的 this.deps 中已收集了相应的 data 依赖
+    // 注意：this.deps 表示当前 computed watcher 的依赖
     let i = this.deps.length
     while (i--) {
+      // 对每个依赖数据，将 Dep.target 添加到依赖数据的 sub 中；
+      // 注意，此时的 Dep.target 为渲染 watcher！！
       this.deps[i].depend()
     }
   }

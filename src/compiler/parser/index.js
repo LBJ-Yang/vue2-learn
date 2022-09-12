@@ -63,7 +63,7 @@ export function createASTElement (
   parent: ASTElement | void
 ): ASTElement {
   return {
-    type: 1,
+    type: 1, // 节点类型，1 代表的是普通节点
     tag,
     attrsList: attrs,
     attrsMap: makeAttrsMap(attrs),
@@ -120,6 +120,7 @@ export function parse (
       // allow root elements with v-if, v-else-if and v-else
       if (root.if && (element.elseif || element.else)) {
         if (process.env.NODE_ENV !== 'production') {
+          // 对根节点进行检查
           checkRootConstraints(element)
         }
         addIfCondition(root, {
@@ -210,7 +211,10 @@ export function parse (
     shouldDecodeNewlinesForHref: options.shouldDecodeNewlinesForHref,
     shouldKeepComment: options.comments,
     outputSourceRange: options.outputSourceRange,
+    
+    // 解析过程中的回调函数
     start (tag, attrs, unary, start, end) {
+      // 解析完开始标签后执行，主要用于生成、丰富 ast element，解析 vue 指令，创建 ast 树形结构
       // check namespace.
       // inherit parent ns if there is one
       const ns = (currentParent && currentParent.ns) || platformGetTagNamespace(tag)
@@ -220,7 +224,8 @@ export function parse (
       if (isIE && ns === 'svg') {
         attrs = guardIESVGBug(attrs)
       }
-
+      
+      // 创建一个 ast 节点对象
       let element: ASTElement = createASTElement(tag, attrs, currentParent)
       if (ns) {
         element.ns = ns
@@ -277,7 +282,9 @@ export function parse (
         processRawAttrs(element)
       } else if (!element.processed) {
         // structural directives
+        // 处理 v-for，丰富 ast element
         processFor(element)
+        // 处理 v-if ast element
         processIf(element)
         processOnce(element)
       }
@@ -285,10 +292,11 @@ export function parse (
       if (!root) {
         root = element
         if (process.env.NODE_ENV !== 'production') {
+          // 对根节点进行检查
           checkRootConstraints(root)
         }
       }
-
+      // 判断是否为一个自闭合标签，例如：img,input
       if (!unary) {
         currentParent = element
         stack.push(element)
@@ -308,6 +316,7 @@ export function parse (
       closeElement(element)
     },
 
+    // 解析文本节点的时候会触发（处理"{{ }}"）
     chars (text: string, start: number, end: number) {
       if (!currentParent) {
         if (process.env.NODE_ENV !== 'production') {

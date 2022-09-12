@@ -52,6 +52,7 @@ function decodeAttr (value, shouldDecodeNewlines) {
 }
 
 export function parseHTML (html, options) {
+  // 主要用于检查标签是否闭合
   const stack = []
   const expectHTML = options.expectHTML
   const isUnaryTag = options.isUnaryTag || no
@@ -104,6 +105,7 @@ export function parseHTML (html, options) {
         }
 
         // Start tag:
+        // 解析开始标签
         const startTagMatch = parseStartTag()
         if (startTagMatch) {
           handleStartTag(startTagMatch)
@@ -248,6 +250,7 @@ export function parseHTML (html, options) {
     }
 
     if (options.start) {
+      // 执行传入的 start 回调函数
       options.start(tagName, attrs, unary, match.start, match.end)
     }
   }

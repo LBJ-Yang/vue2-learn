@@ -44,11 +44,12 @@ const componentVNodeHooks = {
       const mountedNode: any = vnode // work around flow
       componentVNodeHooks.prepatch(mountedNode, mountedNode)
     } else {
+      // 执行构造函数，将返回的 vue 实例保存至 componentInstance
       const child = vnode.componentInstance = createComponentInstanceForVnode(
         vnode,
         activeInstance
       )
-      child.$mount(hydrating ? vnode.elm : undefined, hydrating)
+      child.$mount(hydrating ? vnode.elm : undefined, hydrating); // 组件挂载
     }
   },
 
@@ -109,10 +110,11 @@ export function createComponent (
     return
   }
 
-  const baseCtor = context.$options._base
+  const baseCtor = context.$options._base; // 就是 Vue 构造函数
 
   // plain options object: turn it into a constructor
   if (isObject(Ctor)) {
+    // 当 Ctor 为对象时，即为组件对象，通过 extend 方法返回一个构造函数
     Ctor = baseCtor.extend(Ctor)
   }
 
@@ -125,7 +127,7 @@ export function createComponent (
     return
   }
 
-  // async component
+  // async component 异步组件
   let asyncFactory
   if (isUndef(Ctor.cid)) {
     asyncFactory = Ctor
@@ -183,10 +185,13 @@ export function createComponent (
   }
 
   // install component management hooks onto the placeholder node
+  // 对组件安装通用钩子函数
   installComponentHooks(data)
 
   // return a placeholder vnode
   const name = Ctor.options.name || tag
+  // new  VNode 传参时，children、text、elm 均传的是 undefined
+  // 第七个参数将所有信息合到一起，传给了 componentOptions
   const vnode = new VNode(
     `vue-component-${Ctor.cid}${name ? `-${name}` : ''}`,
     data, undefined, undefined, undefined, context,
@@ -220,6 +225,7 @@ export function createComponentInstanceForVnode (
     options.render = inlineTemplate.render
     options.staticRenderFns = inlineTemplate.staticRenderFns
   }
+  // 执行构造函数，并返回实例
   return new vnode.componentOptions.Ctor(options)
 }
 

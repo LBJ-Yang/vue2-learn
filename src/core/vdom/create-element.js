@@ -87,7 +87,9 @@ export function _createElement (
     data.scopedSlots = { default: children[0] }
     children.length = 0
   }
+  // 主要是对 children 做处理，将其都转为以为数组
   if (normalizationType === ALWAYS_NORMALIZE) {
+    // 手写 render 函数时执行
     children = normalizeChildren(children)
   } else if (normalizationType === SIMPLE_NORMALIZE) {
     children = simpleNormalizeChildren(children)

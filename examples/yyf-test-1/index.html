@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>案例一：更新文本节点</title>
+    <!-- Delete ".min" for console warnings in development -->
+    <script src="../../dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="demo">
+      <section>
+        <p>修改文本节点</p>
+        <span>the name is:</span>
+        <span key="test">{{name}}</span> 
+        <button @click="changeName">change name</button>
+      </section>
+      
+      <p>==========================================================</p>
+
+      <section>
+        <p>list调换顺序</p>
+        <span>the list is:</span>
+        <ul>
+          <li 
+            v-for="(item, ind) in list1"
+            :key="item"
+          >
+          {{item}}
+          </li>
+        </ul>
+        <button @click="changeSort">将首节点移到末尾</button>
+      </section>
+    </div>
+    <script src="./app.js"></script>
+  </body>
+</html>

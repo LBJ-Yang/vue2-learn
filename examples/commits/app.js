@@ -6,22 +6,32 @@ var apiURL = 'https://api.github.com/repos/vuejs/vue/commits?per_page=3&sha='
  * Actual demo
  */
 
+const Child = {
+  template: '<div>this is child</div>'
+}
+
 new Vue({
 
   el: '#demo',
 
+  components: {Child},
+
   data: {
     branches: ['master', 'dev'],
-    currentBranch: 'master',
-    commits: null
+    // people: [{
+    //   name: 'yyf'
+    // }],
+    // commits: null
   },
 
   created: function () {
-    this.fetchData()
+    // this.fetchData()
   },
 
-  watch: {
-    currentBranch: 'fetchData'
+  computed: {
+    test() {
+      return this.branches.join(', ');
+    }
   },
 
   filters: {
